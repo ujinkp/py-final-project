@@ -1,4 +1,5 @@
 from models import Record, AddressBook, NoteBook, Note
+from validators import check_or_raise, validate_phone, validate_email, validate_not_empty
 
 def parse_input(user_input):
     cmd, *args = user_input.split()
@@ -47,12 +48,27 @@ def smart_search(query, book, notes):
 
 @input_error
 def add_contact(args, book: AddressBook):
-    name, phone = args[0], args[1]
+    # Очікуємо: add [name] [phone] [email]
+    if len(args) < 3:
+        raise ValueError("Usage: add [name] [phone] [email]")
+    
+    name, phone, email = args
+    
+    # 1. Валідація
+    check_or_raise(validate_not_empty, name, "Name cannot be empty.")
+    check_or_raise(validate_phone, phone, "Invalid phone! Must be 10 digits.")
+    check_or_raise(validate_email, email, "Invalid email format. Please check the address.")
+    
+    # 2. Логіка створення запису
     record = book.find(name)
     if record is None:
         record = Record(name)
         book.add_record(record)
+    
+    # 3. Додавання даних
     record.add_phone(phone)
+    record.add_email(email) # Тепер це безпечно, бо метод існує!
+    
     return "Contact added."
 
 @input_error
@@ -82,7 +98,12 @@ def birthdays(args, book: AddressBook):
 
 @input_error
 def change_contact(args, book: AddressBook):
+    # Припустимо: change [name] [old_phone] [new_phone]
     name, old_phone, new_phone = args
+    
+    # Валідуємо новий номер
+    check_or_raise(validate_phone, new_phone, "Invalid new phone! Must be 10 digits.")
+    
     record = book.find(name)
     if record:
         record.edit_phone(old_phone, new_phone)
