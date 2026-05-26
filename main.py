@@ -13,6 +13,7 @@ from handlers import (
     find_notes_by_tag,
     delete_contact,
     delete_note,
+    edit_note,
     smart_search 
 )
 
@@ -92,6 +93,10 @@ def main():
             case "delete-contact":
                 print(delete_contact(args, book))
                 
+            case "edit-note":
+                print(edit_note(args, notes))
+
+
             case "delete-note":
                 print(delete_note(args, notes))   
 

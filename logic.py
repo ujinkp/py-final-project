@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from models import AddressBook  
+from models import AddressBook, NoteBook 
 
 def search_contacts(address_book, query):
     """Логіка пошуку по книзі контактів."""
@@ -41,8 +41,11 @@ def get_upcoming_birthdays(address_book):
 
 def search_notes(note_book, query):
     """Пошук нотаток за заголовком або контентом."""
-    return [n for n in note_book.data.values() if query.lower() in n.title.lower() or query.lower() in n.content.lower()]
+    q = query.lower()
+    return [n for n in note_book.data.values() if q in n.title.lower() or q in n.content.lower()]
 
 def sort_notes_by_tag(note_book, tag):
     """Пошук нотаток за тегом."""
-    return [n for n in note_book.data.values() if tag.lower() in [t.lower() for t in n.tags]]
+    t = tag.lower()
+
+    return [n for n in note_book.data.values() if t in [t_tag.lower().strip() for t_tag in n.tags]]

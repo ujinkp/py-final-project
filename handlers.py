@@ -16,33 +16,27 @@ def input_error(func):
     return inner
 
 def smart_search(query, book, notes):
-    query = query.lstrip('#') # прибираємо #
+    query = query.lstrip('#').lower()  # Прибираємо # та переводимо в нижній регістр
     results = []
+    found_contacts = [record for name, record in book.data.items() if query in name.lower()]
     
-    # 1. Пошук у контактах (враховуючи регістр)
-    # Ми використовуємо book.data, щоб перебрати всі імена
-    found_contact = None
-    for name in book.data:
-        if name.lower() == query.lower():
-            found_contact = book.data[name]
-            break
-            
-    if found_contact:
-        results.append(f"--- Contact found ---\n{found_contact}")
+    if found_contacts:
+        results.append("--- Contacts found ---")
+        for record in found_contacts:
+            results.append(str(record))
         
     # 2. Пошук у нотатках за тегом
     note_results = notes.search_notes_by_tag(query)
     if note_results:
         results.append(f"--- Notes found with tag '{query}' ---")
         for n in note_results:
-            results.append(f"   🔹 {n}") # Додаємо відступ для краси
+            results.append(f"   🔹 {n}")
             
-    # Повертаємо результат або повідомлення, якщо нічого не знайдено
+    # 3. Повертаємо результат
     if results:
         return "\n".join(results)
     else:
         return f"Nothing found for '{query}' in contacts or notes."
-
 
 # --- Команди для контактів ---
 
@@ -129,18 +123,28 @@ def delete_contact(args, book: AddressBook):
 
 @input_error
 def add_note(args, notes: NoteBook):
-    # args тепер містить все після "add-note"
-    #  останній аргумент — це завжди теги
+    # Приклад введення: add-note Title "Content goes here" tag1,tag2
     if len(args) < 3:
         raise ValueError("Usage: add-note [title] [content] [tags_comma_separated]")
     
     title = args[0]
-    tags = args[-1].split(',')
+    tags = [t.strip() for t in args[-1].split(',')]
     content = " ".join(args[1:-1])
     
     notes.add_note(Note(title, content, tags))
     return f"Note '{title}' added."
 
+@input_error
+def edit_note(args, notes: NoteBook):
+    if len(args) < 2:
+        raise ValueError("Usage: edit-note [title] [new_content]")
+    
+    title, *content_parts = args
+    new_content = " ".join(content_parts)
+    
+    # Припускаємо, що у NoteBook є метод edit_note
+    notes.edit_note(title, new_content)
+    return f"Note '{title}' updated."
 
 @input_error
 def find_notes_by_tag(args, notes: NoteBook):
