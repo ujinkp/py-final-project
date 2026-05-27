@@ -10,9 +10,9 @@ def input_error(func):
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except ValueError as e: return str(e)
-        except IndexError: return "Enter the required information."
-        except KeyError: return "Not found."
+        except ValueError as e: raise ValueError(str(e))
+        except IndexError: raise ValueError("Not enough arguments provided for this command.")
+        except KeyError: raise ValueError("Record not found.")
     return inner
 
 def smart_search(query, book, notes):
@@ -67,15 +67,22 @@ def add_contact(args, book: AddressBook):
 
 @input_error
 def add_birthday(args, book: AddressBook):
+    if len(args) < 2: 
+        raise ValueError("add-birthday [name] [birthday]")
+    
     name, birthday = args
     record = book.find(name)
+
     if record:
         record.add_birthday(birthday)
         return "Birthday added."
+    
     raise KeyError
 
 @input_error
 def show_birthday(args, book: AddressBook):
+    if len(args) < 1: 
+        raise ValueError("show-birthday [name]")
     name = args[0]
     record = book.find(name)
     if record and record.birthday:
@@ -87,12 +94,13 @@ def birthdays(args, book: AddressBook):
     # Використовуємо функцію з logic.py (переконайтеся, що імпортували її)
     from logic import get_upcoming_birthdays
     upcoming = get_upcoming_birthdays(book)
-    if not upcoming: return "No birthdays next week."
-    return "\n".join([f"{u['name']}: {u['congratulation_date']}" for u in upcoming])
+    if not upcoming: return "No birthdays next week." 
+    return upcoming
 
 @input_error
 def change_contact(args, book: AddressBook):
-    # Припустимо: change [name] [old_phone] [new_phone]
+    if len(args) < 3:
+        raise ValueError("change [name] [old_phone] [new_phone]")
     name, old_phone, new_phone = args
     
     # Валідуємо новий номер
@@ -111,10 +119,15 @@ def show_phone(args, book: AddressBook):
 
 @input_error
 def show_all_contacts(book: AddressBook):
-    return "\n".join([str(r) for r in book.data.values()]) if book.data else "Address book is empty."
+    # return "\n".join([str(r) for r in book.data.values()]) if book.data else "Address book is empty."
+    if not book.data:
+        return []
+    return list(book.data.values())
 
 @input_error
 def delete_contact(args, book: AddressBook):
+    if len(args) < 1: 
+        raise ValueError("show-birthday [name]")
     book.delete(args[0])
     return f"Contact '{args[0]}' deleted."
 
@@ -150,9 +163,12 @@ def edit_note(args, notes: NoteBook):
 def find_notes_by_tag(args, notes: NoteBook):
     # Використовуємо функцію з logic.py
     from logic import sort_notes_by_tag
-    tag = args[0]
-    found = sort_notes_by_tag(notes, tag)
-    return "\n".join([str(n) for n in found]) if found else "No notes found."
+    # tag = args[0]
+    # found = sort_notes_by_tag(notes, tag)
+    # return "\n".join([str(n) for n in found]) if found else "No notes found."
+    if not notes.data:
+        return []
+    return list(notes.data.values())
 
 @input_error
 def delete_note(args, notes: NoteBook):
