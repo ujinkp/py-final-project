@@ -14,7 +14,9 @@ from handlers import (
     delete_contact,
     delete_note,
     edit_note,
-    smart_search 
+    smart_search,
+    save_data,
+    load_data 
 )
 
 from prompt_toolkit.history import InMemoryHistory
@@ -30,23 +32,6 @@ from views import (
     render_error
 )
 
-
-# --- Функції серіалізації даних ---
-
-def save_data(address_book, note_book, filename="data.json"):
-    with open(filename, "w", encoding="utf-8") as f:
-        json.dump({"contacts": address_book.to_dict(), "notes": note_book.to_dict()}, f, ensure_ascii=False, indent=2)
-
-def load_data(filename="data.json"):
-    try:
-        with open(filename, "r", encoding="utf-8") as f:
-            data = json.load(f)
-            return AddressBook.from_dict(data["contacts"]), NoteBook.from_dict(data["notes"])
-    except (FileNotFoundError, KeyError, ValueError):
-        return AddressBook(), NoteBook()
-
-# --- Головна функція ---
-
 def main():
     book, notes = load_data()
     render_welcome_message()
@@ -54,7 +39,7 @@ def main():
 
     while True:
         try:
-            user_input = get_user_input(book, command_history)
+            user_input = get_user_input(book, notes, command_history)
         except (KeyboardInterrupt, EOFError):
             user_input = "exit"
         if not user_input:

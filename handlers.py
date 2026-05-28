@@ -1,5 +1,18 @@
+import json
 from models import Record, AddressBook, NoteBook, Note
 from validators import check_or_raise, validate_phone, validate_email, validate_not_empty
+
+def save_data(address_book, note_book, filename="data.json"):
+    with open(filename, "w", encoding="utf-8") as f:
+        json.dump({"contacts": address_book.to_dict(), "notes": note_book.to_dict()}, f, ensure_ascii=False, indent=2)
+
+def load_data(filename="data.json"):
+    try:
+        with open(filename, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            return AddressBook.from_dict(data["contacts"]), NoteBook.from_dict(data["notes"])
+    except (FileNotFoundError, KeyError, ValueError):
+        return AddressBook(), NoteBook()
 
 def parse_input(user_input):
     cmd, *args = user_input.split()
@@ -10,9 +23,12 @@ def input_error(func):
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except ValueError as e: raise ValueError(str(e))
-        except IndexError: raise ValueError("Not enough arguments provided for this command.")
-        except KeyError: raise ValueError("Record not found.")
+        except ValueError as e: 
+            raise ValueError(str(e))
+        except IndexError: 
+            raise ValueError("Not enough arguments provided for this command.")
+        except KeyError as e: 
+            raise ValueError(str(e) if str(e) else "Requested item not found.")
     return inner
 
 def smart_search(query, book, notes):
@@ -172,6 +188,13 @@ def find_notes_by_tag(args, notes: NoteBook):
 
 @input_error
 def delete_note(args, notes: NoteBook):
+    if not args:
+        raise ValueError("delete-note [title]")
+        
     title = args[0]
+    
+    if title not in notes.data:
+        raise KeyError(f"Note with title '{title}' not found.")
+        
     notes.delete_note(title)
     return f"Note '{title}' deleted."
