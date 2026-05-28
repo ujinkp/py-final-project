@@ -8,6 +8,8 @@ from handlers import (
     add_birthday, 
     show_birthday, 
     birthdays,
+    add_address,
+    edit_address,
     show_all_contacts,  
     add_note,           # Нові імпорти
     find_notes_by_tag,
@@ -82,6 +84,11 @@ def main():
             case "all":
                 print(show_all_contacts(book))
   
+            case "add-address":
+                print(add_address(args, book))
+                
+            case "edit-address":
+                print(edit_address(args, book))
 
             # --- Команди нотаток (тепер передаємо об'єкт notes) ---
             case "add-note":

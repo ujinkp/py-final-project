@@ -159,3 +159,40 @@ def delete_note(args, notes: NoteBook):
     title = args[0]
     notes.delete_note(title)
     return f"Note '{title}' deleted."
+
+@input_error
+def add_address(args, book: AddressBook):
+    # Очікуємо: add-address [name] [address...]
+    if len(args) < 2:
+        raise ValueError("Usage: add-address [name] [address]")
+    
+    name = args[0]
+    # Використовуємо " ".join, щоб адреса могла складатися з кількох слів
+    address = " ".join(args[1:])
+    
+    # Валідація: перевіряємо, чи адреса не порожня
+    check_or_raise(validate_not_empty, address, "Address cannot be empty.")
+    
+    record = book.find(name)
+    if record:
+        record.add_address(address)
+        return f"Address added to contact '{name}'."
+    raise KeyError
+
+@input_error
+def edit_address(args, book: AddressBook):
+    # Очікуємо: edit-address [name] [new_address...]
+    if len(args) < 2:
+        raise ValueError("Usage: edit-address [name] [new_address]")
+    
+    name = args[0]
+    new_address = " ".join(args[1:])
+    
+    # Валідація
+    check_or_raise(validate_not_empty, new_address, "Address cannot be empty.")
+    
+    record = book.find(name)
+    if record:
+        record.edit_address(new_address)
+        return f"Address for contact '{name}' updated."
+    raise KeyError
