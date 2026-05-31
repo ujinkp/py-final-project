@@ -52,7 +52,6 @@ def input_error(func):
 
 def smart_search(query, book, notes):
 
-    
     # Очищаємо запит від символу #
     clean_query = str(query).lstrip("#").strip().lower()
 
@@ -61,10 +60,7 @@ def smart_search(query, book, notes):
     note_results = search_notes(notes, clean_query)
 
     # Повертаємо СЛОВНИК, як того вимагає функція render_smart_search у views.py
-    return {
-        "contacts": found_contacts,
-        "notes": note_results
-    }
+    return {"contacts": found_contacts, "notes": note_results}
 
 
 # Команди для контактів
@@ -138,7 +134,9 @@ def birthdays(args, book: AddressBook):
             if days < 0:
                 raise ValueError("Number of days cannot be negative.")
         except ValueError:
-            raise ValueError("Please provide a valid number of days, e.g., 'birthdays 14'")
+            raise ValueError(
+                "Please provide a valid number of days, e.g., 'birthdays 14'"
+            )
 
     # Передаємо days у функцію розрахунку
     upcoming = get_upcoming_birthdays(book, days=days)
@@ -151,9 +149,7 @@ def change_contact(args, book: AddressBook):
         raise ValueError("change-contact [name] [old_phone] [new_phone]")
     name, old_phone, new_phone = args
 
-    check_or_raise(
-        validate_phone, new_phone, "Invalid new phone! Must be 10 digits."
-    )
+    check_or_raise(validate_phone, new_phone, "Invalid new phone! Must be 10 digits.")
 
     record = book.find(name)
     if record:
