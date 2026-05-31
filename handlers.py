@@ -50,7 +50,7 @@ def input_error(func):
 
 
 def smart_search(query, book, notes):
-    query = query.lstrip("#").lower()  # Прибираємо # та переводимо в нижній регістр
+    query = query.lstrip("#").lower()
     results = []
     found_contacts = [
         record for name, record in book.data.items() if query in name.lower()
@@ -61,14 +61,12 @@ def smart_search(query, book, notes):
         for record in found_contacts:
             results.append(str(record))
 
-    # 2 Пошук у нотатках за тегом
     note_results = notes.search_notes_by_tag(query)
     if note_results:
         results.append(f"--- Notes found with tag '{query}' ---")
         for n in note_results:
             results.append(f"   🔹 {n}")
 
-    # 3 Повертаємо результат
     if results:
         return "\n".join(results)
     else:
@@ -80,9 +78,8 @@ def smart_search(query, book, notes):
 
 @input_error
 def add_contact(args, book: AddressBook):
-    # Очікуємо: add [name] [phone] [email]
     if len(args) < 2:
-        raise ValueError("add [name] [phone] [email_optional]")
+        raise ValueError("add-contact [name] [phone] [email_optional]")
 
     name = args[0]
     phone = args[1]
@@ -92,16 +89,16 @@ def add_contact(args, book: AddressBook):
     check_or_raise(validate_phone, phone, "Invalid phone! Must be 10 digits.")
     if email:
         check_or_raise(
-            validate_email, email, "Invalid email format. Please check the address."
+            validate_email,
+            email,
+            "Invalid email format. Please check the address.",
         )
 
-    # 2 Логіка створення запису
     record = book.find(name)
     if record is None:
         record = Record(name)
         book.add_record(record)
 
-    # 3 Додавання даних
     record.add_phone(phone)
     if email:
         record.add_email(email)
@@ -165,11 +162,12 @@ def birthdays(args, book: AddressBook):
 @input_error
 def change_contact(args, book: AddressBook):
     if len(args) < 3:
-        raise ValueError("change [name] [old_phone] [new_phone]")
+        raise ValueError("change-contact [name] [old_phone] [new_phone]")
     name, old_phone, new_phone = args
 
-    # Валідуємо новий номер
-    check_or_raise(validate_phone, new_phone, "Invalid new phone! Must be 10 digits.")
+    check_or_raise(
+        validate_phone, new_phone, "Invalid new phone! Must be 10 digits."
+    )
 
     record = book.find(name)
     if record:
@@ -181,12 +179,13 @@ def change_contact(args, book: AddressBook):
 @input_error
 def show_phone(args, book: AddressBook):
     record = book.find(args[0])
-    return "; ".join([p.value for p in record.phones]) if record else "Not found."
+    if not record:
+        return "Not found."
+    return "; ".join(p.value for p in record.phones)
 
 
 @input_error
 def show_all_contacts(book: AddressBook):
-    # return "\n".join([str(r) for r in book.data.values()]) if book.data else "Address book is empty."
     if not book.data:
         return []
     return list(book.data.values())
@@ -231,12 +230,6 @@ def edit_note(args, notes: NoteBook):
 
 @input_error
 def find_notes_by_tag(args, notes: NoteBook):
-    # Використовуємо функцію з logic.py
-    from logic import sort_notes_by_tag
-
-    # tag = args[0]
-    # found = sort_notes_by_tag(notes, tag)
-    # return "\n".join([str(n) for n in found]) if found else "No notes found."
     if not notes.data:
         return []
     return list(notes.data.values())
@@ -258,7 +251,6 @@ def delete_note(args, notes: NoteBook):
 
 @input_error
 def add_address(args, book: AddressBook):
-    # Очікуємо: add-address [name] [address...]
     if len(args) < 2:
         raise ValueError("Usage: add-address [name] [address]")
 
@@ -266,7 +258,6 @@ def add_address(args, book: AddressBook):
     # Використовуємо " ".join, щоб адреса могла складатися з кількох слів
     address = " ".join(args[1:])
 
-    # Валідація: перевіряємо, чи адреса не порожня
     check_or_raise(validate_not_empty, address, "Address cannot be empty.")
 
     record = book.find(name)
@@ -278,14 +269,12 @@ def add_address(args, book: AddressBook):
 
 @input_error
 def edit_address(args, book: AddressBook):
-    # Очікуємо: edit-address [name] [new_address...]
     if len(args) < 2:
         raise ValueError("Usage: edit-address [name] [new_address]")
 
     name = args[0]
     new_address = " ".join(args[1:])
 
-    # Валідація
     check_or_raise(validate_not_empty, new_address, "Address cannot be empty.")
 
     record = book.find(name)

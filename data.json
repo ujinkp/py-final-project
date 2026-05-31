@@ -23,19 +23,47 @@
     "David": {
       "name": "David",
       "phones": [
-        "0203040506"
+        "0507149287"
       ],
-      "birthday": null,
+      "birthday": "03.06.2000",
       "email": "david@gmail.com",
       "address": null
     },
-    "Marian": {
-      "name": "Marian",
+    "Anastasiya": {
+      "name": "Anastasiya",
       "phones": [
-        "0099887766"
+        "0958129834"
       ],
       "birthday": null,
-      "email": "marian@gmail.com",
+      "email": null,
+      "address": null
+    },
+    "John": {
+      "name": "John",
+      "phones": [
+        "0449968399"
+      ],
+      "birthday": null,
+      "email": null,
+      "address": null
+    },
+    "Veronika": {
+      "name": "Veronika",
+      "phones": [
+        "0508173648"
+      ],
+      "birthday": null,
+      "email": null,
+      "address": null
+    },
+    "Diana": {
+      "name": "Diana",
+      "phones": [
+        "0508384987",
+        "0954875649"
+      ],
+      "birthday": null,
+      "email": null,
       "address": null
     },
     "Ruslan": {
@@ -77,6 +105,13 @@
       "content": "earn 100K by the end of 2026, personal",
       "tags": [
         "finance"
+      ]
+    },
+    "Презентація_21-06,": {
+      "title": "Презентація_21-06,",
+      "content": "Підготувати звіт за 1й квартал і оформити в презентацію для борда директорів,",
+      "tags": [
+        "Finance"
       ]
     }
   }

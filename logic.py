@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from models import AddressBook, NoteBook
 
 
 def search_contacts(address_book, query):

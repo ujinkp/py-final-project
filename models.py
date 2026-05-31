@@ -25,7 +25,9 @@ class Name(Field):
 
 class Phone(Field):
     def __init__(self, value):
-        check_or_raise(validate_phone, value, "Phone number must contain 10 digits.")
+        check_or_raise(
+            validate_phone, value, "Phone number must contain 10 digits."
+        )
         super().__init__(value)
 
 
@@ -43,7 +45,9 @@ class Address(Field):
 
 class Birthday(Field):
     def __init__(self, value):
-        check_or_raise(validate_date, value, "Invalid date format. Use DD.MM.YYYY")
+        check_or_raise(
+            validate_date, value, "Invalid date format. Use DD.MM.YYYY"
+        )
         self.value = datetime.strptime(value, "%d.%m.%Y").date()
 
 
@@ -113,9 +117,8 @@ class Record:
         return record
 
     def __str__(self):
-        res = [
-            f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
-        ]
+        phones_str = "; ".join(p.value for p in self.phones)
+        res = [f"Contact name: {self.name.value}, phones: {phones_str}"]
         if self.email:
             res.append(f"email: {self.email}")
         if self.address:
@@ -148,8 +151,6 @@ class AddressBook(UserDict):
             book.add_record(Record.from_dict(record_data))
         return book
 
-        # Нотатки
-
 
 class Note:
     def __init__(self, title, content, tags=None):
@@ -158,7 +159,11 @@ class Note:
         self.tags = tags if tags else []
 
     def to_dict(self):
-        return {"title": self.title, "content": self.content, "tags": self.tags}
+        return {
+            "title": self.title,
+            "content": self.content,
+            "tags": self.tags,
+        }
 
     @classmethod
     def from_dict(cls, data):
@@ -178,7 +183,10 @@ class NoteBook(UserDict):
 
     def search_notes_by_tag(self, tag):
         tag = tag.lower()
-        return [n for n in self.data.values() if tag in [t.lower() for t in n.tags]]
+        return [
+            n for n in self.data.values()
+            if tag in [t.lower() for t in n.tags]
+        ]
 
     def delete_note(self, title):
         if title in self.data:
