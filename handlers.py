@@ -216,9 +216,20 @@ def edit_note(args, notes: NoteBook):
 
 @input_error
 def find_notes_by_tag(args, notes: NoteBook):
+    # Перевіряємо, чи передав користувач тег для пошуку
+    if not args:
+        raise ValueError("Usage: find-notes [tag]")
+
+    tag_to_find = args[0]
+
     if not notes.data:
         return []
-    return list(notes.data.values())
+
+    # Імпортуємо правильну функцію фільтрації з бізнес-логіки
+    from logic import sort_notes_by_tag
+
+    # Викликаємо її та повертаємо відфільтрований список нотаток
+    return sort_notes_by_tag(notes, tag_to_find)
 
 
 @input_error
