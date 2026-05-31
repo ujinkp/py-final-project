@@ -1,6 +1,6 @@
 import json
 from models import Record, AddressBook, NoteBook, Note
-from logic import search_contacts, search_notes
+from logic import search_contacts, search_notes, sort_notes_by_tag
 from validators import (
     check_or_raise,
     validate_phone,
@@ -225,10 +225,6 @@ def find_notes_by_tag(args, notes: NoteBook):
     if not notes.data:
         return []
 
-    # Імпортуємо правильну функцію фільтрації з бізнес-логіки
-    from logic import sort_notes_by_tag
-
-    # Викликаємо її та повертаємо відфільтрований список нотаток
     return sort_notes_by_tag(notes, tag_to_find)
 
 
