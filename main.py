@@ -11,7 +11,7 @@ from handlers import (
     add_address,
     edit_address,
     show_all_contacts,
-    add_note,  # Нові імпорти
+    add_note,
     find_notes_by_tag,
     delete_contact,
     delete_note,
@@ -59,7 +59,7 @@ def main():
                 case "hello":
                     print("[bold blue]How can I help you?[/bold blue]")
 
-                case "add":
+                case "add-contact":
                     render_success(add_contact(args, book))
 
                 case "add-address":
@@ -68,7 +68,7 @@ def main():
                 case "edit-address":
                     render_success(edit_address(args, book))
 
-                case "change":
+                case "change-contact":
                     render_success(change_contact(args, book))
 
                 case "add-birthday":
@@ -96,12 +96,19 @@ def main():
                 case "birthdays":
                     upcoming_birthdays = birthdays(args, book)
                     if not upcoming_birthdays:
-                        print("[yellow]📅 No upcoming birthdays next week.[/yellow]")
+                        print(
+                            "[yellow]📅 No upcoming birthdays"
+                            " next week.[/yellow]"
+                        )
                     else:
-                        print("\n[bold magenta]🎂 Upcoming Birthdays:[/bold magenta]")
+                        print(
+                            "\n[bold magenta]🎂 Upcoming"
+                            " Birthdays:[/bold magenta]"
+                        )
                         for u in upcoming_birthdays:
                             print(
-                                f"  ▪️ [bold green]{u['name']}[/bold green]: {u['congratulation_date']}"
+                                f"  ▪️ [bold green]{u['name']}[/bold green]"
+                                f": {u['congratulation_date']}"
                             )
 
                 case "all":
@@ -114,7 +121,6 @@ def main():
                         found_notes, title=f"🔍 Notes with tag '{args[0]}'"
                     )
 
-                # Додаємо наш новий "розумний" кейс:
                 case cmd if cmd.startswith("#"):
                     search_results = smart_search(cmd, book, notes)
                     render_smart_search(search_results)
