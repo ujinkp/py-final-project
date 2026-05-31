@@ -6,7 +6,7 @@
         "0202020202",
         "0303030303"
       ],
-      "birthday": null,
+      "birthday": "30.05.2000",
       "email": "hanna@gmail.com",
       "address": null
     },
@@ -16,26 +16,72 @@
         "0303030303",
         "0909090909"
       ],
-      "birthday": null,
+      "birthday": "01.06.1999",
       "email": "mariia@gmail.com",
       "address": null
     },
     "David": {
       "name": "David",
       "phones": [
-        "0203040506"
+        "0507149287"
       ],
-      "birthday": null,
+      "birthday": "03.06.2000",
       "email": "david@gmail.com",
       "address": null
     },
-    "Marian": {
-      "name": "Marian",
+    "Anastasiya": {
+      "name": "Anastasiya",
       "phones": [
-        "0099887766"
+        "0958129834"
       ],
       "birthday": null,
-      "email": "marian@gmail.com",
+      "email": null,
+      "address": null
+    },
+    "John": {
+      "name": "John",
+      "phones": [
+        "0449968399"
+      ],
+      "birthday": null,
+      "email": null,
+      "address": null
+    },
+    "Veronika": {
+      "name": "Veronika",
+      "phones": [
+        "0508173648"
+      ],
+      "birthday": null,
+      "email": null,
+      "address": null
+    },
+    "Diana": {
+      "name": "Diana",
+      "phones": [
+        "0508384987",
+        "0954875649"
+      ],
+      "birthday": null,
+      "email": null,
+      "address": null
+    },
+    "Ruslan": {
+      "name": "Ruslan",
+      "phones": [
+        "7878787878"
+      ],
+      "birthday": null,
+      "email": "utu@test.com",
+      "address": null
+    },
+    "Valentin": {
+      "name": "Valentin",
+      "phones": [
+        "0897897867"
+      ],
+      "birthday": "02.06.1986",
+      "email": "val@test.com",
       "address": null
     }
   },
@@ -59,6 +105,13 @@
       "content": "earn 100K by the end of 2026, personal",
       "tags": [
         "finance"
+      ]
+    },
+    "Презентація_21-06,": {
+      "title": "Презентація_21-06,",
+      "content": "Підготувати звіт за 1й квартал і оформити в презентацію для борда директорів,",
+      "tags": [
+        "Finance"
       ]
     }
   }
