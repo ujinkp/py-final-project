@@ -1,6 +1,6 @@
 import json
 from models import Record, AddressBook, NoteBook, Note
-from logic import search_contacts, search_notes
+from logic import search_contacts, search_notes, sort_notes_by_tag
 from validators import (
     check_or_raise,
     validate_phone,
@@ -216,9 +216,16 @@ def edit_note(args, notes: NoteBook):
 
 @input_error
 def find_notes_by_tag(args, notes: NoteBook):
+    # Перевіряємо, чи передав користувач тег для пошуку
+    if not args:
+        raise ValueError("Usage: find-notes [tag]")
+
+    tag_to_find = args[0]
+
     if not notes.data:
         return []
-    return list(notes.data.values())
+
+    return sort_notes_by_tag(notes, tag_to_find)
 
 
 @input_error
