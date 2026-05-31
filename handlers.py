@@ -1,5 +1,6 @@
 import json
 from models import Record, AddressBook, NoteBook, Note
+from logic import search_contacts, search_notes
 from validators import (
     check_or_raise,
     validate_phone,
@@ -50,8 +51,7 @@ def input_error(func):
 
 
 def smart_search(query, book, notes):
-    # Импортуємо функції бізнес-логіки
-    from logic import search_contacts, search_notes
+
     
     # Очищаємо запит від символу #
     clean_query = str(query).lstrip("#").strip().lower()
