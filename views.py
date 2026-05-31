@@ -111,7 +111,7 @@ def render_notes_list(notes_list, title="📝 Found Notes"):
 
         note_text = (
             f"{content}\n\n"
-            f"[italic grey50]🏷️ Tags: {tags_str}[/italic grey50]"
+            f"[italic grey50] Tags: {tags_str}[/italic grey50]"
         )
 
         print(
