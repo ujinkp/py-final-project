@@ -20,8 +20,8 @@ PROMPT_STYLE = Style.from_dict(
 
 COMMANDS_LIST = [
     "hello",
-    "add",
-    "change",
+    "add-contact",
+    "change-contact",
     "phone",
     "add-birthday",
     "show-birthday",
@@ -36,7 +36,9 @@ COMMANDS_LIST = [
     "exit",
 ]
 
-COMMAND_COMPLETER = WordCompleter(COMMANDS_LIST, ignore_case=True, sentence=True)
+COMMAND_COMPLETER = WordCompleter(
+    COMMANDS_LIST, ignore_case=True, sentence=True
+)
 
 
 def render_welcome_message():
@@ -66,7 +68,7 @@ def render_contacts_table(records_list):
 
     for record in records_list:
         name = str(record.name)
-        phones = ", ".join([str(p) for p in record.phones]) if record.phones else "-"
+        phones = ", ".join(str(p) for p in record.phones) if record.phones else "-"
         birthday = str(record.birthday) if record.birthday else "-"
         table.add_row(name, phones, birthday)
 
@@ -99,13 +101,18 @@ def render_notes_list(notes_list, title="📝 Found Notes"):
     print(f"\n[bold magenta]{title}[/bold magenta]")
     for note in notes_list:
         tags_str = (
-            ", ".join(note.tags) if hasattr(note, "tags") and note.tags else "no tags"
+            ", ".join(note.tags)
+            if hasattr(note, "tags") and note.tags
+            else "no tags"
         )
         content = note.content if hasattr(note, "content") else str(note)
 
         content = " ".join(content.split())
 
-        note_text = f"{content}\n\n[italic grey50]🏷️ Tags: {tags_str}[/italic grey50]"
+        note_text = (
+            f"{content}\n\n"
+            f"[italic grey50]🏷️ Tags: {tags_str}[/italic grey50]"
+        )
 
         print(
             Panel(
@@ -135,9 +142,14 @@ def render_smart_search(search_results):
 
 def get_user_input(address_book, notes, command_history):
     def get_toolbar_text():
-        contacts_count = len(address_book.data) if hasattr(address_book, "data") else 0
+        contacts_count = (
+            len(address_book.data) if hasattr(address_book, "data") else 0
+        )
         notes_count = len(notes.data) if hasattr(notes, "data") else 0
-        return f" [TAB] Hints | Total 👥 Contacts: {contacts_count} 📝 Notes: {notes_count} | Type 'exit' to quit"
+        return (
+            f" [TAB] Hints | Total 👥 Contacts: {contacts_count}"
+            f" 📝 Notes: {notes_count} | Type 'exit' to quit"
+        )
 
     return prompt(
         [("class:prompt", "🤖 assistant ❯ ")],
