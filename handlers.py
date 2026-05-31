@@ -1,5 +1,6 @@
 import json
 from models import Record, AddressBook, NoteBook, Note
+from logic import search_contacts, search_notes
 from validators import (
     check_or_raise,
     validate_phone,
@@ -50,27 +51,20 @@ def input_error(func):
 
 
 def smart_search(query, book, notes):
-    query = query.lstrip("#").lower()
-    results = []
-    found_contacts = [
-        record for name, record in book.data.items() if query in name.lower()
-    ]
 
-    if found_contacts:
-        results.append("--- Contacts found ---")
-        for record in found_contacts:
-            results.append(str(record))
+    
+    # Очищаємо запит від символу #
+    clean_query = str(query).lstrip("#").strip().lower()
 
-    note_results = notes.search_notes_by_tag(query)
-    if note_results:
-        results.append(f"--- Notes found with tag '{query}' ---")
-        for n in note_results:
-            results.append(f"   🔹 {n}")
+    # Викликаємо потужні функції пошуку з logic.py
+    found_contacts = search_contacts(book, clean_query)
+    note_results = search_notes(notes, clean_query)
 
-    if results:
-        return "\n".join(results)
-    else:
-        return f"Nothing found for '{query}' in contacts or notes."
+    # Повертаємо СЛОВНИК, як того вимагає функція render_smart_search у views.py
+    return {
+        "contacts": found_contacts,
+        "notes": note_results
+    }
 
 
 # Команди для контактів
@@ -136,27 +130,19 @@ def show_birthday(args, book: AddressBook):
 def birthdays(args, book: AddressBook):
     from logic import get_upcoming_birthdays
 
-    upcoming = get_upcoming_birthdays(book)
+    # Перевіряємо, чи передав користувач кількість днів (наприклад, "birthdays 14")
+    days = 7  # значення за замовчуванням
+    if args:
+        try:
+            days = int(args[0])
+            if days < 0:
+                raise ValueError("Number of days cannot be negative.")
+        except ValueError:
+            raise ValueError("Please provide a valid number of days, e.g., 'birthdays 14'")
 
-    if not upcoming:
-        return []
-
-    sanitized_birthdays = []
-
-    for u in upcoming:
-        if isinstance(u, dict):
-            name = u.get("name", "Unknown")
-            date = u.get("congratulation_date", "")
-        elif hasattr(u, "name"):
-            name = u.name.value if hasattr(u.name, "value") else str(u.name)
-            date = str(u.birthday) if hasattr(u, "birthday") and u.birthday else ""
-        else:
-            name = str(u)
-            date = ""
-
-        sanitized_birthdays.append({"name": name, "congratulation_date": date})
-
-    return sanitized_birthdays
+    # Передаємо days у функцію розрахунку
+    upcoming = get_upcoming_birthdays(book, days=days)
+    return upcoming
 
 
 @input_error

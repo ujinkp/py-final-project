@@ -17,7 +17,7 @@ def search_contacts(address_book, query):
     return results
 
 
-def get_upcoming_birthdays(address_book):
+def get_upcoming_birthdays(address_book, days=7):  # <--- Додали параметр days=7
     # Логіка розрахунку днів народження
     upcoming_birthdays = []
     today = datetime.today().date()
@@ -29,7 +29,8 @@ def get_upcoming_birthdays(address_book):
             birthday_this_year = birthday_this_year.replace(year=today.year + 1)
 
         days_until = (birthday_this_year - today).days
-        if 0 <= days_until <= 7:
+        # Тепер порівнюємо з динамічною кількістю днів замість жорсткої 7
+        if 0 <= days_until <= days:  
             congrats_date = birthday_this_year
             weekday = congrats_date.weekday()
             if weekday == 5:

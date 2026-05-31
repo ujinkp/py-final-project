@@ -97,9 +97,7 @@ def main():
                     upcoming_birthdays = birthdays(args, book)
                     if not upcoming_birthdays:
                         print(
-                            "[yellow]📅 No upcoming birthdays"
-                            " next week.[/yellow]"
-                        )
+                            "[yellow]📅 No upcoming birthdays found for the specified period.[/yellow]"                       )
                     else:
                         print(
                             "\n[bold magenta]🎂 Upcoming"
