@@ -180,7 +180,7 @@ def show_all_contacts(book: AddressBook):
 @input_error
 def delete_contact(args, book: AddressBook):
     if len(args) < 1:
-        raise ValueError("show-birthday [name]")
+        raise ValueError("delete-contact [name]")
     book.delete(args[0])
     return f"Contact '{args[0]}' deleted."
 
